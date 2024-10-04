@@ -2,56 +2,71 @@ package prueba.desarrolloFinal.controladores;
 
 import java.util.HashMap;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import prueba.desarrolloFinal.modelos.Docente;
-import prueba.desarrolloFinal.servicios.DocenteServicioImpl;
+import prueba.desarrolloFinal.modelos.Tema;
+import prueba.desarrolloFinal.servicios.TemaServicioImpl;
 
 @RestController
-@RequestMapping("/api/v1/docentes")
-public class DocenteControlador{
-	 @Autowired
-	 DocenteServicioImpl docenteServicio;
+@RequestMapping("/api/v1/temas")
+public class TemaControlador {
+    @Autowired
+    private TemaServicioImpl temaServicio;
 
-	 @GetMapping("/")
-	 public List<Docente> obtenerDocentes() {
-	        return docenteServicio.obtenertodo();
-	 }
+    // Obtener todos los temas
+    @GetMapping("/")
+    public List<Tema> obtenerTemas() {
+        return temaServicio.obtenertodo();
+    }
 
-	 @PostMapping("/guardar")
-	 public ResponseEntity<Docente> guardarDocente(@RequestBody Docente docente) {
-	    Docente nuevo_docente = docenteServicio.guardar(docente);
-	    return new ResponseEntity<>(nuevo_docente, HttpStatus.CREATED);
-	 }
+    // Guardar un nuevo tema
+    @PostMapping("/guardar")
+    public ResponseEntity<Tema> guardarTema(@RequestBody Tema tema) {
+        Tema nuevoTema = temaServicio.guardar(tema);
+        return new ResponseEntity<>(nuevoTema, HttpStatus.CREATED);
+    }
 
-	 @GetMapping("/{legajo}")
-	 public ResponseEntity<Docente> obtenerDocentePorLegajo(@PathVariable long legajo) {
-	     Docente docente = docenteServicio.obtenerPorId(legajo);
-	     return ResponseEntity.ok(docente);
-	 }
-	 
-	    @PutMapping("/{legajo}")
-	    public ResponseEntity<Docente> actualizar(@PathVariable long legajo, @RequestBody Docente docente) {
-	        Docente docentePorLegajo = docenteServicio.obtenerPorId(legajo);
-	        if (docentePorLegajo == null) {
-	            return ResponseEntity.notFound().build();
-	        }
-	        
-	        docentePorLegajo.setNombre(docente.getNombre());
-	        
-	        Docente docente_actualizado = docenteServicio.guardar(docentePorLegajo);
-	        return new ResponseEntity<>(docente_actualizado, HttpStatus.OK);
-	    }	 
+    // Obtener un tema por ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Tema> obtenerTemaPorId(@PathVariable long id) {
+        Tema tema = temaServicio.obtenerPorId(id);
+        if (tema == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(tema);
+    }
 
-	 @DeleteMapping("/{legajo}")
-	 public ResponseEntity<HashMap<String, Boolean>> eliminarDocente(@PathVariable long legajo) {
-	     this.docenteServicio.eliminar(legajo);
-	     
-	     HashMap<String, Boolean> estadoEliminado = new HashMap<>();
-	     estadoEliminado.put("eliminado", true);
-	     return ResponseEntity.ok(estadoEliminado);
-	 }
+    // Actualizar un tema existente
+    @PutMapping("/{id}")
+    public ResponseEntity<Tema> actualizarTema(@PathVariable long id, @RequestBody Tema tema) {
+        Tema temaExistente = temaServicio.obtenerPorId(id);
+        if (temaExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Actualizar los campos del tema existente
+        temaExistente.setNombre(tema.getNombre());
+        temaExistente.setDescripcion(tema.getDescripcion());
+
+        Tema temaActualizado = temaServicio.guardar(temaExistente);
+        return new ResponseEntity<>(temaActualizado, HttpStatus.OK);
+    }
+
+    // Eliminar un tema por ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HashMap<String, Boolean>> eliminarTema(@PathVariable long id) {
+        Tema temaExistente = temaServicio.obtenerPorId(id);
+        if (temaExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        temaServicio.eliminar(id);
+        HashMap<String, Boolean> estadoEliminado = new HashMap<>();
+        estadoEliminado.put("eliminado", true);
+        return ResponseEntity.ok(estadoEliminado);
+    }
 }
