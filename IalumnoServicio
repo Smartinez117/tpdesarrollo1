@@ -9,4 +9,6 @@ public interface IAlumnoServicio {
 	public Alumno guardar(Alumno alumno);
 	public Alumno obtenerPorId(long id);
 	public void eliminar(long id);
+    // Nuevo método para obtener alumnos por curso
+    List<Alumno> obtenerAlumnosPorCurso(long cursoId);
 }
