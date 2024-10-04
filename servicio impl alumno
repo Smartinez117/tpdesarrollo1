@@ -31,4 +31,11 @@ public class AlumnoServicioImpl implements IAlumnoServicio{
 	   public void eliminar(long id) {
 	       alumnoRepositorio.deleteById(id);
 	   }
+	   //agregado para el endpoint de alumnos de un curso por id
+	   @Override
+	   public List<Alumno> obtenerAlumnosPorCurso(long cursoId) {
+	       return alumnoRepositorio.findAlumnosByCursoId(cursoId);
+	   }
+	   //--------------------esto tambien------------------
 }
+
