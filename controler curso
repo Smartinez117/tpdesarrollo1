@@ -3,7 +3,10 @@ package prueba.desarrolloFinal.controladores;
 import java.util.HashMap;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus; 
 import org.springframework.http.ResponseEntity; 
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +75,13 @@ public class CursoControlador {
          estadoEliminado.put("eliminado", true); 
          return ResponseEntity.ok(estadoEliminado); 
     } 
- 
+    //funcion para el primer endpoint para obtener curso que finaliza fecha especifica
+    @GetMapping("/finalizan/{fecha_fin}")
+    public ResponseEntity<List<Curso>> obtenerCursosPorFechaFin(
+            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date fecha_fin) {
+        List<Curso> cursos = cursoServicio.obtenerCursosPorFechaFin(fecha_fin);
+        return ResponseEntity.ok(cursos);
+    }
+    //funcion para el primer endpoint para obtener curso que finaliza fecha especifica
 
 }
