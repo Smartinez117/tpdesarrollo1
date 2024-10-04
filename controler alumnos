@@ -61,6 +61,13 @@ public class AlumnoControlador {
 	       HashMap<String, Boolean> estadoEliminado = new HashMap<>();
 	       estadoEliminado.put("eliminado", true);
 	       return ResponseEntity.ok(estadoEliminado);
-	   }	
+	   }
+	   //end point para saber los alumnos de un curso por id
+	   @GetMapping("/cursos/{cursoId}/alumnos")
+	   public ResponseEntity<List<Alumno>> obtenerAlumnosPorCurso(@PathVariable long cursoId) {
+	       List<Alumno> alumnos = alumnoServicio.obtenerAlumnosPorCurso(cursoId);
+	       return ResponseEntity.ok(alumnos);
+	   }
+	   
 
 }
