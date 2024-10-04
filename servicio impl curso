@@ -1,6 +1,6 @@
 package prueba.desarrolloFinal.servicios;
 
-
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,4 +33,9 @@ public class CursoServicioImpl implements ICursoServicio{
 	   public void eliminar(long id) {
 	       cursoRepositorio.deleteById(id);
 	   }
+	 //funcion para el primer endpoint para obtener curso que finaliza fecha especifica
+	   public List<Curso> obtenerCursosPorFechaFin(Date fecha_fin) {
+		    return cursoRepositorio.findByFechaFin(fecha_fin);
+		}	   
+	 //funcion para el primer endpoint para obtener curso que finaliza fecha especifica
 }
