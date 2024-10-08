@@ -1,0 +1,44 @@
+Endpoint para Obtener Docente por ID
+Endpoint: GET /docentes/{id}
+Funcionalidad: Devuelve el nombre del docente, su ID, y los cursos que imparte (solo su ID y tema).
+Parámetros:
+id: ID del docente.
+Lógica:
+El controlador recibe la solicitud.
+El servicio busca el docente por ID.
+Se obtienen los cursos asociados al docente.
+Se construye un DTO para devolver solo la información necesaria.
+
+---------------------CONTROLADOR--------------------------------------
+  @RestController
+@RequestMapping("/docentes")
+public class DocenteControlador {
+
+    @Autowired
+    private DocenteServicioImpl docenteServicio;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DocenteDTO> obtenerDocentePorId(@PathVariable Long id) {
+        DocenteDTO docenteDTO = docenteServicio.obtenerDocentePorId(id);
+        return ResponseEntity.ok(docenteDTO);
+    }
+}
+---------------------------SERVICIO---------------------------------
+@Service
+public class DocenteServicioImpl {
+
+    @Autowired
+    private DocenteRepositorio docenteRepositorio;
+
+    public DocenteDTO obtenerDocentePorId(Long id) {
+        Docente docente = docenteRepositorio.findById(id)
+            .orElseThrow(() -> new RuntimeException("Docente no encontrado"));
+        
+        List<CursoTemaDTO> cursosTemas = docente.getCursos()
+            .stream()
+            .map(curso -> new CursoTemaDTO(curso.getId(), curso.getTema().getNombre()))
+            .collect(Collectors.toList());
+
+        return new DocenteDTO(docente.getId(), docente.getNombre(), cursosTemas);
+    }
+}
