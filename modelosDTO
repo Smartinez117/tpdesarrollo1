@@ -1,0 +1,43 @@
+public class AlumnoDTO {
+    private Long id;
+    private String nombre;
+    private Long cursoId;
+    private String temaNombre;
+
+    // Constructor, Getters y Setters
+}
+import java.util.List;
+
+public class CursoDTO {
+    private Long id;
+    private String nombre;
+    private String docenteNombre;
+    private Long docenteLegajo;
+    private Double precio;
+    private LocalDate fechaInicio;
+    private LocalDate fechaFin;
+    private List<AlumnoDTO> alumnos;
+
+    // Constructor, Getters y Setters
+}
+import java.util.List;
+
+public class DocenteDTO {
+    private Long id;
+    private String nombre;
+    private List<CursoTemaDTO> cursos;
+
+    // Constructor, Getters y Setters
+}
+public class CursoTemaDTO {
+    private Long cursoId;
+    private String temaNombre;
+
+    // Constructor, Getters y Setters
+}
+public class TemaDTO {
+    private String nombre;
+    private Long cursoId;
+
+    // Constructor, Getters y Setters
+}
