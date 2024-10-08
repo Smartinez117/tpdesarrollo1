@@ -1,0 +1,40 @@
+Endpoint: GET /alumnos/{id}
+Funcionalidad: Devuelve el ID y nombre del alumno, junto con el ID del curso y el nombre del tema.
+Parámetros:
+id: ID del alumno.
+Lógica:
+El controlador recibe la solicitud.
+El servicio busca el alumno por ID.
+Se obtiene el curso asociado al alumno y su tema.
+Se construye un DTO (Data Transfer Object) para devolver solo la información necesaria.
+---------------CONTROLADOR---------------------
+@RestController
+@RequestMapping("/alumnos")
+public class AlumnoControlador {
+
+    @Autowired
+    private AlumnoServicioImpl alumnoServicio;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AlumnoDTO> obtenerAlumnoPorId(@PathVariable Long id) {
+        AlumnoDTO alumnoDTO = alumnoServicio.obtenerAlumnoPorId(id);
+        return ResponseEntity.ok(alumnoDTO);
+    }
+}
+--------------------------SERVICIO-------------------------------
+@Service
+public class AlumnoServicioImpl {
+
+    @Autowired
+    private AlumnoRepositorio alumnoRepositorio;
+
+    public AlumnoDTO obtenerAlumnoPorId(Long id) {
+        Alumno alumno = alumnoRepositorio.findById(id)
+            .orElseThrow(() -> new RuntimeException("Alumno no encontrado"));
+        
+        // Supongamos que tienes un método para obtener el curso y tema
+        CursoTema cursoTema = obtenerCursoTemaPorAlumno(alumno);
+        
+        return new AlumnoDTO(alumno.getId(), alumno.getNombre(), cursoTema.getCursoId(), cursoTema.getTemaNombre());
+    }
+}
