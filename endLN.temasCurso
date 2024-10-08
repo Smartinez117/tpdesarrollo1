@@ -1,0 +1,39 @@
+Endpoint para Obtener Temas por Curso
+Endpoint: GET /temas/{cursoId}
+Funcionalidad: Devuelve los temas asociados a un curso específico junto con el ID del curso.
+Parámetros:
+cursoId: ID del curso.
+Lógica:
+El controlador recibe la solicitud.
+El servicio busca los temas asociados al curso.
+Se construye un DTO para devolver solo la información necesaria.
+
+-----------------------------CONTROLADOR-------------------------------------
+@RestController
+@RequestMapping("/temas")
+public class TemaControlador {
+
+    @Autowired
+    private TemaServicioImpl temaServicio;
+
+    @GetMapping("/{cursoId}")
+    public ResponseEntity<List<TemaDTO>> obtenerTemasPorCurso(@PathVariable Long cursoId) {
+        List<TemaDTO> temas = temaServicio.obtenerTemasPorCurso(cursoId);
+        return ResponseEntity.ok(temas);
+    }
+}
+----------------------------servicio---------------------------------------
+@Service
+public class TemaServicioImpl {
+
+    @Autowired
+    private TemaRepositorio temaRepositorio;
+
+    public List<TemaDTO> obtenerTemasPorCurso(Long cursoId) {
+        List<Tema> temas = temaRepositorio.findByCursoId(cursoId); // Método que busca temas por ID de curso
+        
+        return temas.stream()
+            .map(tema -> new TemaDTO(tema.getNombre(), tema.getCurso().getId()))
+            .collect(Collectors.toList());
+    }
+}
