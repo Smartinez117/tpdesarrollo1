@@ -1,0 +1,46 @@
+Endpoint para Obtener Curso por ID
+Endpoint: GET /cursos/{id}
+Funcionalidad: Devuelve el nombre del curso, ID, docente (con nombre y legajo), precio, fechas de inicio y fin, y la lista de alumnos (solo su nombre e ID).
+Parámetros:
+id: ID del curso.
+Lógica:
+El controlador recibe la solicitud.
+El servicio busca el curso por ID.
+Se obtienen los detalles del docente y la lista de alumnos.
+Se construye un DTO para devolver solo la información necesaria.
+-----------------CONTROLADOR-------------------------------------
+@RestController
+@RequestMapping("/cursos")
+public class CursoControlador {
+
+    @Autowired
+    private CursoServicioImpl cursoServicio;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CursoDTO> obtenerCursoPorId(@PathVariable Long id) {
+        CursoDTO cursoDTO = cursoServicio.obtenerCursoPorId(id);
+        return ResponseEntity.ok(cursoDTO);
+    }
+}
+------------------------------SERVICIO----------------------------------------
+@Service
+public class CursoServicioImpl {
+
+    @Autowired
+    private CursoRepositorio cursoRepositorio;
+
+    public CursoDTO obtenerCursoPorId(Long id) {
+        Curso curso = cursoRepositorio.findById(id)
+            .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
+        
+        // Obtener docente y alumnos
+        Docente docente = curso.getDocente();
+        List<AlumnoDTO> alumnos = curso.getAlumnos()
+            .stream()
+            .map(alumno -> new AlumnoDTO(alumno.getId(), alumno.getNombre()))
+            .collect(Collectors.toList());
+
+        return new CursoDTO(curso.getId(), curso.getNombre(), docente.getNombre(), docente.getLegajo(),
+                            curso.getPrecio(), curso.getFechaInicio(), curso.getFechaFin(), alumnos);
+    }
+}
