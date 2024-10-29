@@ -1,8 +1,14 @@
 package prueba.desarrolloFinal.modelos;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+
 
 @Entity
 public class Docente implements Serializable {
@@ -11,9 +17,17 @@ public class Docente implements Serializable {
     @Id
     private long legajo; 
     private String nombre;
+    
+    @OneToMany(mappedBy = "docente")
+    @JsonIgnoreProperties({"alumnos","docente"})
+    private List<Curso> cursos; 
 
+    public Docente(long legajo,String nombre) {
+        this.nombre = nombre;
+        this.legajo = legajo;
+    }
     public Docente() {}
-
+    
 	public long getLegajo() {
 		return legajo;
 	}
@@ -33,6 +47,13 @@ public class Docente implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-    
+	public List<Curso> getCursos() {
+		return cursos;
+	}
+	public void setCursos(List<Curso> cursos) {
+		this.cursos = cursos;
+	}
 
+    
+	
 }
