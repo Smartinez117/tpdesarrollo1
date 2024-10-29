@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,9 +25,20 @@ public class Alumno implements Serializable{
     
     @Column(name = "fecha_nacimiento")
     private Date fecha_nacimiento;
-
+	//agregado para que funcion el ultimo endpoint
+	@ManyToMany(mappedBy = "alumnos")
+	@JsonIgnoreProperties({"alumnos","docente","tema"})
+	private List<Curso> cursos;
+      
+    public Alumno(Long id, String nombre, Date nacimiento, List<Curso> cursos) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fecha_nacimiento = nacimiento;
+        this.cursos = cursos;
+    }
     public Alumno() {}
-
+    
+    
 	public long getId() {
 		return id;
 	}
@@ -53,9 +66,17 @@ public class Alumno implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
 	//agregado para que funcion el ultimo endpoint
-	@ManyToMany(mappedBy = "alumnos")
-	private List<Curso> cursos;
-	//agregado para que funcion el ultimo endpoint
+	//----------------logica de negocio-------------------
+    public List<Curso> getCursos() { // Método getter para cursos
+        return cursos;
+    }
+	public void setCursos(List<Curso> cursos) {
+		this.cursos = cursos;
+	}
+    
+	//-------------------logica de negocio------------
+	
     
 }
