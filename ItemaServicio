@@ -9,4 +9,5 @@ public interface ITemaServicio {
 	public Tema guardar(Tema tema);
 	public Tema obtenerPorId(long id);
 	public void eliminar(long id);
+	public Tema obtenerTemaPorId(Long id); 
 }
