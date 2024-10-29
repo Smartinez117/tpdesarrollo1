@@ -3,7 +3,9 @@ package prueba.desarrolloFinal.modelos;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;//agregado par el endpoint de relacion entre las tablas
-	
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,10 +26,12 @@ public class Curso implements Serializable{
 
     @ManyToOne
     @JoinColumn(name = "tema_id", nullable = false)
+    @JsonIgnoreProperties({"cursos"})
     private Tema tema;
 
     @ManyToOne
     @JoinColumn(name = "docente_legajo", nullable = false)
+    @JsonIgnoreProperties({"cursos","alumnos"})
     private Docente docente;
     
     @Column(name = "fecha_inicio")
@@ -45,9 +49,18 @@ public class Curso implements Serializable{
         joinColumns = @JoinColumn(name = "curso_id"),
         inverseJoinColumns = @JoinColumn(name = "alumno_id")
     )
+    @JsonIgnoreProperties({"cursos","docente"})
     private List<Alumno> alumnos;
 
     
+    public Curso(Long id, Tema tema, double precio, Date fechaInicio, Date fechaFin, Docente docente) {
+        this.id = id;
+        this.tema = tema;
+        this.precio = precio;
+        this.fecha_inicio = fechaInicio;
+        this.fecha_fin = fechaFin;
+        this.docente = docente;
+    }
     public Curso() {}
     
 	public long getId() {
