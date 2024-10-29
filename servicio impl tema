@@ -11,7 +11,7 @@ import prueba.desarrolloFinal.repositorios.TemaRepositorio;
 public class TemaServicioImpl implements ITemaServicio{
 	   @Autowired
 	   TemaRepositorio temaRepositorio;
-
+	   
 	   @Override
 	   public List<Tema> obtenertodo() {
 	       return temaRepositorio.findAll();
@@ -31,4 +31,10 @@ public class TemaServicioImpl implements ITemaServicio{
 	   public void eliminar(long id) {
 	       temaRepositorio.deleteById(id);
 	   }
+	    @Override
+	    public Tema obtenerTemaPorId(Long id) {
+	        return temaRepositorio.findById(id)
+	            .orElse(null); // Devuelve null si no se encuentra el tema
+	    }
+
 }
