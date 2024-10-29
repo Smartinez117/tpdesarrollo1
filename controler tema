@@ -11,25 +11,16 @@ import org.springframework.web.bind.annotation.*;
 import prueba.desarrolloFinal.modelos.Tema;
 import prueba.desarrolloFinal.servicios.TemaServicioImpl;
 
+@CrossOrigin(origins= "http://localhost:4200")
 @RestController
 @RequestMapping("/api/v1/temas")
 public class TemaControlador {
     @Autowired
     private TemaServicioImpl temaServicio;
-
-    // Obtener todos los temas
+    //---------------------GET-------------------------------
     @GetMapping("/")
     public List<Tema> obtenerTemas() {
-        return temaServicio.obtenertodo();
-    }
-
-    // Guardar un nuevo tema
-    @PostMapping("/guardar")
-    public ResponseEntity<Tema> guardarTema(@RequestBody Tema tema) {
-        Tema nuevoTema = temaServicio.guardar(tema);
-        return new ResponseEntity<>(nuevoTema, HttpStatus.CREATED);
-    }
-
+        return temaServicio.obtenertodo();}
     // Obtener un tema por ID
     @GetMapping("/{id}")
     public ResponseEntity<Tema> obtenerTemaPorId(@PathVariable long id) {
@@ -39,7 +30,13 @@ public class TemaControlador {
         }
         return ResponseEntity.ok(tema);
     }
-
+    //---------------------POST-------------------------------
+    // Guardar un nuevo tema
+    @PostMapping("/guardar")
+    public ResponseEntity<Tema> guardarTema(@RequestBody Tema tema) {
+        Tema nuevoTema = temaServicio.guardar(tema);
+        return new ResponseEntity<>(nuevoTema, HttpStatus.CREATED);}
+    //---------------------PUT-------------------------------
     // Actualizar un tema existente
     @PutMapping("/{id}")
     public ResponseEntity<Tema> actualizarTema(@PathVariable long id, @RequestBody Tema tema) {
@@ -55,7 +52,7 @@ public class TemaControlador {
         Tema temaActualizado = temaServicio.guardar(temaExistente);
         return new ResponseEntity<>(temaActualizado, HttpStatus.OK);
     }
-
+    //---------------------DELETE-------------------------------
     // Eliminar un tema por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<HashMap<String, Boolean>> eliminarTema(@PathVariable long id) {
